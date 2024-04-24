@@ -6,7 +6,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '../users/users.model';
+import { User } from '../../users/models/users.model';
 import { UserRoles } from './user-roles.model';
 
 interface RolesCreationAttrs {
@@ -14,7 +14,7 @@ interface RolesCreationAttrs {
   description: string;
 }
 
-@Table({ tableName: 'roles ' })
+@Table({ tableName: 'roles' })
 export class Role extends Model<Role, RolesCreationAttrs> {
   @ApiProperty({ example: '1', description: 'ID' })
   @Column({

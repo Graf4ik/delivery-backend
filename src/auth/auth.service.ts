@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
-import { User } from '../users/users.model';
+import { User } from '../users/models/users.model';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Tokens } from './types/tokens.type';
@@ -48,6 +48,11 @@ export class AuthService {
     return await this.usersService.update(userId, { refreshToken: null });
   }
 
+  async getUserProfile(userDto: CreateUserDto): Promise<User> {
+    const user = await this.usersService.getOneByEmail(userDto.email);
+    return user;
+  }
+
   async validateUser(userDto: CreateUserDto): Promise<User> {
     const user = await this.usersService.getOneByEmail(userDto.email);
     const passwordMatches = await bcrypt.compare(
@@ -68,7 +73,7 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.sign(payload, {
         secret: process.env.JWT_ACCESS_SECRET,
-        expiresIn: '15m',
+        expiresIn: '2h',
       }),
       this.jwtService.sign(payload, {
         secret: process.env.JWT_REFRESH_SECRET,

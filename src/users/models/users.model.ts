@@ -2,12 +2,14 @@ import {
   BelongsToMany,
   Column,
   DataType,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRoles } from '../roles/user-roles.model';
-import { Role } from '../roles/roles.model';
+import { UserRoles } from '../../roles/models/user-roles.model';
+import { Role } from '../../roles/models/roles.model';
+import { Order } from '../../orders/models/orders.model';
 
 interface UserCreationAttrs {
   email: string;
@@ -43,9 +45,9 @@ export class User extends Model<User, UserCreationAttrs> {
   @ApiProperty({ example: 'Ivan Ivanov', description: 'Full name' })
   @Column({
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
   })
-  firstName: string;
+  fullName: string;
 
   @Column({
     type: DataType.STRING,
@@ -55,4 +57,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @BelongsToMany(() => Role, () => UserRoles)
   roles: Role[];
+
+  @HasMany(() => Order)
+  orders: Order[];
 }

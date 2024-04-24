@@ -9,7 +9,7 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { User } from './users.model';
+import { User } from './models/users.model';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -27,7 +27,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @ApiOperation({ summary: 'Add user' })
-  @ApiResponse({ status: 200, type: [User] })
+  @ApiResponse({ status: 201, type: [User] })
   @UsePipes(CustomValidationPipe)
   @Post()
   create(@Body() dto: CreateUserDto): Promise<User> {
@@ -35,8 +35,7 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, type: [User] })
-  @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @UseGuards(RolesGuard)
   @Get()
   getAll(): Promise<User[]> {
@@ -44,16 +43,13 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Set role' })
-  @ApiResponse({ status: 200 })
-  @Roles(Role.ADMIN)
-  @UseGuards(RolesGuard)
+  @ApiResponse({ status: 201 })
   @Post('/role')
   addRole(@Body() dto: AddRoleDto): Promise<AddRoleDto> {
     return this.usersService.addRole(dto);
   }
 
   @ApiOperation({ summary: 'Get user by email' })
-  @ApiResponse({ status: 200, type: [User] })
   @Public()
   @Get('/:email')
   getOne(@Param('email', ParseUUIDPipe) email: string): Promise<User> {
@@ -61,7 +57,7 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Update user by id' })
-  @ApiResponse({ status: 200, type: [User] })
+  @ApiResponse({ status: 201, type: [User] })
   @Public()
   @UsePipes(CustomValidationPipe)
   @Patch(':id')

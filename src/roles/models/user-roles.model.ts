@@ -6,7 +6,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Role } from './roles.model';
-import { User } from '../users/users.model';
+import { User } from '../../users/models/users.model';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Table({ tableName: 'user-roles', createdAt: false, updatedAt: false })
@@ -25,12 +25,12 @@ export class UserRoles extends Model<UserRoles> {
   @Column({
     type: DataType.INTEGER,
   })
-  roleId: string;
+  roleId: number;
 
   @ApiProperty({ example: '2', description: 'User id' })
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
   })
-  userId: string;
+  userId: number;
 }
