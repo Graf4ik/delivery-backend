@@ -48,9 +48,15 @@ export class AuthService {
     return await this.usersService.update(userId, { refreshToken: null });
   }
 
-  async getUserProfile(userDto: CreateUserDto): Promise<User> {
-    const user = await this.usersService.getOneByEmail(userDto.email);
-    return user;
+  async getUserProfile(userDto: CreateUserDto): Promise<Partial<User>> {
+    const user = await this.usersService.getOneByEmail(userDto?.email);
+    return {
+      id: user.id,
+      email: user.email,
+      fullName: user.fullName,
+      orders: user.orders,
+      roles: user.roles,
+    };
   }
 
   async validateUser(userDto: CreateUserDto): Promise<User> {

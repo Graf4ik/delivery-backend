@@ -65,6 +65,7 @@ export class OrdersService {
 
   async getOrdersByUser(userId: number): Promise<Order[]> {
     const orders = this.ordersRepository.findAll({
+      include: { all: true },
       where: { userId },
     });
     return orders;

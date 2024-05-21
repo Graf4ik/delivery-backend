@@ -15,10 +15,8 @@ export class ProductsService {
     return product;
   }
 
-  async getAll(): Promise<Product[]> {
-    const product = await this.productRepository.findAll<Product>({
-      include: { all: true },
-    });
+  async getAll(): Promise<Partial<CreateProductDto[]>> {
+    const product = await this.productRepository.findAll<Product>();
     return product;
   }
 
@@ -33,9 +31,9 @@ export class ProductsService {
 
   async update(
     id: number,
-    updatedPoductDto: Partial<UpdateProductDto>,
+    updatedProductDto: Partial<UpdateProductDto>,
   ): Promise<[affectedCount: number, affectedRows: any[]]> {
-    return await this.productRepository.update(updatedPoductDto, {
+    return await this.productRepository.update(updatedProductDto, {
       returning: null,
       where: { id },
     });

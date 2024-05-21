@@ -33,7 +33,7 @@ export class ProductsController {
   @ApiResponse({ status: 200, type: [Product] })
   @UsePipes(CustomValidationPipe)
   @Get()
-  getAll(): Promise<Product[]> {
+  getAll(): Promise<Partial<CreateProductDto[]>> {
     return this.productsService.getAll();
   }
 

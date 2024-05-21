@@ -13,7 +13,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Tokens } from './types/tokens.type';
 import { GetCurrentUser, GetCurrentUserId, Public } from '../common/decorators';
 import { User } from '../users/models/users.model';
-import { RefreshTokenGuard } from '../common/guards';
+import { AccessTokenGuard, RefreshTokenGuard } from '../common/guards';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -37,6 +37,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Logout user session' })
+  @UseGuards(AccessTokenGuard)
   @Post('/logout')
   @HttpCode(HttpStatus.OK)
   logout(
@@ -55,9 +56,12 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Get user profile' })
-  @Get('profile')
+  @UseGuards(AccessTokenGuard)
+  @Get('/profile')
   @HttpCode(HttpStatus.OK)
-  async getUserProfile(@GetCurrentUser() userDto: User): Promise<User> {
+  async getUserProfile(
+    @GetCurrentUser() userDto: User,
+  ): Promise<Partial<User>> {
     return this.authService.getUserProfile(userDto);
   }
 }
